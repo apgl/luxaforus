@@ -191,6 +191,18 @@ class SlackController {
             let (ok, _) = self.check(response: response)
             NSLog("Slack: dnd.setSnooze \(ok ? "success" : "failure")")
             self.isSnoozed = true
+            self.setStatus(emoji: ":tomato:", status: "Focusing")
+        }
+    }
+    
+    /// Request 'users.profile.set' to set a status.
+    private func setStatus(emoji emojiString: String = "", status statusText: String = "") {
+        let params = authenticatedParams([
+            "profile": JSON(dictionaryLiteral: ("status_text", statusText), ("status_emoji", emojiString))
+        ])
+        _ = Alamofire.request("\(kApiUrl)/users.profile.set", method: .post, parameters: params).responseJSON { response in
+            let ok = response.error == nil
+            NSLog("Slack: users.profile.set \(ok ? "success" : "failure")")
         }
     }
     
@@ -201,6 +213,7 @@ class SlackController {
             let (ok, _) = self.check(response: response)
             NSLog("Slack: dnd.endSnooze \(ok ? "success" : "failure")")
             self.isSnoozed = false
+            self.setStatus()
         }
     }
     

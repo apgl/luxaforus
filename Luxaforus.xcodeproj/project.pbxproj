@@ -281,7 +281,7 @@
 				TargetAttributes = {
 					3D46ACC51F066A30000F2AD2 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = QZ6RQPA63Y;
+						DevelopmentTeam = J96E99DFB6;
 						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
@@ -304,6 +304,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -569,7 +570,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = QZ6RQPA63Y;
+				DEVELOPMENT_TEAM = J96E99DFB6;
 				INFOPLIST_FILE = Luxaforus/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = space.traversal.Luxaforus;
@@ -591,7 +592,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = QZ6RQPA63Y;
+				DEVELOPMENT_TEAM = J96E99DFB6;
 				INFOPLIST_FILE = Luxaforus/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = space.traversal.Luxaforus;
