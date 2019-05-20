@@ -14,7 +14,8 @@ private let kBaseUrl = "https://slack.com"
 private let kApiUrl = "\(kBaseUrl)/api"
 
 /// Redirect URL for auth calls.
-private let kRedirectUrl = "https://traversal.space/luxaforus/slack"
+//private let kRedirectUrl = "https://traversal.space/luxaforus/slack"
+private let kRedirectUrl = "http://localhost"
 
 private let kSnoozePeriod = 60 // minutes
 
@@ -25,6 +26,8 @@ class SlackController {
     private weak var delegate: SlackControllerDelegate? = nil
     
     private var accessToken: String?
+    
+    private var userId: String?
     
     private var isSnoozed: Bool? = nil
     
@@ -49,6 +52,7 @@ class SlackController {
         
         // Check current state
         accessToken = persistenceManager.fetchSlackToken()
+        userId = persistenceManager.fetchSlackUserId()
         delegate?.slackController(stateChanged: isLoggedIn)
         
         // Add open URL handler
@@ -146,7 +150,7 @@ class SlackController {
         var urlComponents = URLComponents(string: "\(kBaseUrl)/oauth/authorize")
         urlComponents?.queryItems = [
             URLQueryItem(name: "client_id", value: kSlackClientId),
-            URLQueryItem(name: "scope", value: "dnd:write"),
+            URLQueryItem(name: "scope", value: "dnd:write,users.profile:read,users.profile:write"),
             URLQueryItem(name: "redirect_uri", value: kRedirectUrl)
         ]
 
@@ -171,6 +175,7 @@ class SlackController {
                 NSLog("Slack: oauth.access success")
                 if let accessToken = json["access_token"].string {
                     self.saveOAuthSession(withToken: accessToken)
+                    self.save(userId: json["user_id"].string)
                     self.authSuccess(withTeam: json["team_name"].string ?? "Unknown")
                 } else {
                     self.authFailure(withMessage: "Access token not returned.")
@@ -264,6 +269,11 @@ class SlackController {
         accessToken = token
         persistenceManager.set(slackToken: token)
         delegate?.slackController(stateChanged: isLoggedIn)
+    }
+    
+    private func save(userId id: String?) {
+        userId = id
+        persistenceManager.set(slackUserId: id)
     }
     
     /// Clears async events between snooze calls.

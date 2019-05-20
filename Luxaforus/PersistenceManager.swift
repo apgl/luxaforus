@@ -16,6 +16,7 @@ private let kKeyIgnoreUpdates = "ignoreUpdates"
 private let kKeyLatestUpdate = "latestUpdate"
 
 private let kKeySlackToken = "\(kKeychainPrefix)-SlackToken"
+private let kKeySlackUserId = "\(kKeychainPrefix)-SlackUserId"
 
 class PersistenceManager {
     
@@ -79,6 +80,24 @@ class PersistenceManager {
             keychain.set(token, forKey: kKeySlackToken)
         } else {
             keychain.delete(kKeySlackToken)
+        }
+    }
+    
+    /// Fetches Slack user id
+    ///
+    /// - Returns: Current Slack user id or null.
+    func fetchSlackUserId() -> String? {
+        return keychain.get(kKeySlackUserId)
+    }
+    
+    /// Persists Slack user id.
+    ///
+    /// - Parameter id: Current slack user id or null.
+    func set(slackUserId id: String?) {
+        if let id = id {
+            keychain.set(id, forKey: kKeySlackUserId)
+        } else {
+            keychain.delete(kKeySlackUserId)
         }
     }
     
