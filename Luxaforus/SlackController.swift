@@ -29,6 +29,8 @@ class SlackController {
     
     private var userId: String?
     
+    private var previousStatus: SlackStatus?
+    
     private var isSnoozed: Bool? = nil
     
     private var snoozeTimer: Timer?
@@ -196,14 +198,16 @@ class SlackController {
             let (ok, _) = self.check(response: response)
             NSLog("Slack: dnd.setSnooze \(ok ? "success" : "failure")")
             self.isSnoozed = true
-            self.setStatus(emoji: ":tomato:", status: "Focusing")
+            self.getCurrentUserStatus {
+                self.update(status: .pomodoro)
+            }
         }
     }
     
     /// Request 'users.profile.set' to set a status.
-    private func setStatus(emoji emojiString: String = "", status statusText: String = "") {
+    private func update(status userStatus: SlackStatus) {
         let params = authenticatedParams([
-            "profile": JSON(dictionaryLiteral: ("status_text", statusText), ("status_emoji", emojiString))
+            "profile": userStatus.jsonValue
         ])
         _ = Alamofire.request("\(kApiUrl)/users.profile.set", method: .post, parameters: params).responseJSON { response in
             let ok = response.error == nil
@@ -218,7 +222,21 @@ class SlackController {
             let (ok, _) = self.check(response: response)
             NSLog("Slack: dnd.endSnooze \(ok ? "success" : "failure")")
             self.isSnoozed = false
-            self.setStatus()
+            self.update(status: self.previousStatus ?? .none)
+        }
+    }
+    
+    private func getCurrentUserStatus(completionHandler: (() -> Void)? = nil) {
+        let params = authenticatedParams([
+            "user":userId ?? ""
+        ])
+        _ = Alamofire.request("\(kApiUrl)/users.profile.get", method: .get, parameters: params).responseJSON { response in
+            defer {
+                completionHandler?()
+            }
+            let (_, jsonResponse) = self.check(response: response)
+            guard let json = jsonResponse else { return }
+            self.previousStatus = SlackStatus(withProfileResponse: json)
         }
     }
     
@@ -271,6 +289,10 @@ class SlackController {
         delegate?.slackController(stateChanged: isLoggedIn)
     }
     
+    /// Saves user id.
+    ///
+    /// - Parameters:
+    ///   - id: User id.
     private func save(userId id: String?) {
         userId = id
         persistenceManager.set(slackUserId: id)

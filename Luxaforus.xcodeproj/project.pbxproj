@@ -24,6 +24,7 @@
 		3DB73B091F21D7B800551EA1 /* LightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB73B081F21D7B800551EA1 /* LightController.swift */; };
 		3DB73B0B1F21DF7B00551EA1 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB73B0A1F21DF7B00551EA1 /* PersistenceManager.swift */; };
 		3DD7C6311F28B305008FD362 /* Credentials.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DD7C6301F28B305008FD362 /* Credentials.m */; };
+		9AFB074122932F76002BD8F3 /* SlackStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFB074022932F76002BD8F3 /* SlackStatus.swift */; };
 		F0BA16277E4F86ACCC9ED59A /* Pods_Luxaforus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BAC15124C720B73E146525F /* Pods_Luxaforus.framework */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,7 @@
 		3DD7C6301F28B305008FD362 /* Credentials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Credentials.m; sourceTree = "<group>"; };
 		3DD7C6321F28B34A008FD362 /* Credentials.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Credentials.h; sourceTree = "<group>"; };
 		6260CA446F9EEF23B89D26D7 /* Pods-Luxaforus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Luxaforus.release.xcconfig"; path = "Pods/Target Support Files/Pods-Luxaforus/Pods-Luxaforus.release.xcconfig"; sourceTree = "<group>"; };
+		9AFB074022932F76002BD8F3 /* SlackStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlackStatus.swift; sourceTree = "<group>"; };
 		9BAC15124C720B73E146525F /* Pods_Luxaforus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Luxaforus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A48099DBE08ADE28C00DA5C6 /* Pods-Luxaforus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Luxaforus.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Luxaforus/Pods-Luxaforus.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,6 +163,7 @@
 				3D5178F31F0A312E002AB64C /* Luxaforus-Bridging-Header.h */,
 				3DD7C6321F28B34A008FD362 /* Credentials.h */,
 				3DD7C6301F28B305008FD362 /* Credentials.m */,
+				9AFB074022932F76002BD8F3 /* SlackStatus.swift */,
 			);
 			path = Luxaforus;
 			sourceTree = "<group>";
@@ -400,6 +403,7 @@
 				3D5178FF1F0A37F9002AB64C /* LXDevice.m in Sources */,
 				3D5178FE1F0A37F9002AB64C /* hid.c in Sources */,
 				3D65B3771F29F0B200138612 /* UpdateController.swift in Sources */,
+				9AFB074122932F76002BD8F3 /* SlackStatus.swift in Sources */,
 				3DD7C6311F28B305008FD362 /* Credentials.m in Sources */,
 				3DB73B0B1F21DF7B00551EA1 /* PersistenceManager.swift in Sources */,
 				3DB73B091F21D7B800551EA1 /* LightController.swift in Sources */,
