@@ -14,6 +14,7 @@ private let kKeychainPrefix = "Luxaforus"
 private let kKeyDimmed = "dimLight"
 private let kKeyIgnoreUpdates = "ignoreUpdates"
 private let kKeyLatestUpdate = "latestUpdate"
+private let kKeyColorBlindMode = "colorBlindMode"
 
 private let kKeySlackToken = "\(kKeychainPrefix)-SlackToken"
 private let kKeySlackUserId = "\(kKeychainPrefix)-SlackUserId"
@@ -99,6 +100,14 @@ class PersistenceManager {
         } else {
             keychain.delete(kKeySlackUserId)
         }
+    }
+    
+    func set(colorBlindMode enabled: Bool) {
+        defaults.set(enabled, forKey: kKeyColorBlindMode)
+    }
+    
+    func fetchColorBlindModeEnabled() -> Bool {
+        return defaults.bool(forKey: kKeyColorBlindMode)
     }
     
 }

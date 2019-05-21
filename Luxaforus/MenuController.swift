@@ -16,13 +16,14 @@ class MenuController: NSObject, NSMenuDelegate {
     
     private let connectionItem: NSMenuItem
     private let dimStateItem: NSMenuItem
+    private let colorBlindItem: NSMenuItem
     private let ignoreUpdatesItem: NSMenuItem
     private let slackIntegrationItem: NSMenuItem
     
     weak var delegate: MenuControllerDelegate? = nil
 
     override init() {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         connectionItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
         connectionItem.isEnabled = false
@@ -36,6 +37,9 @@ class MenuController: NSObject, NSMenuDelegate {
         
         dimStateItem = NSMenuItem(title: "Dim Light", action: #selector(changeDimStateAction(sender:)), keyEquivalent: "")
         preferencesMenu.addItem(dimStateItem)
+        
+        colorBlindItem = NSMenuItem(title: "Color Blind Mode", action: #selector(colorBlindAction(sender:)), keyEquivalent: "")
+        preferencesMenu.addItem(colorBlindItem)
         
         ignoreUpdatesItem = NSMenuItem(title: "Ignore Updates", action: #selector(changeIgnoreUpdatesAction(sender:)), keyEquivalent: "")
         preferencesMenu.addItem(ignoreUpdatesItem)
@@ -127,6 +131,10 @@ class MenuController: NSObject, NSMenuDelegate {
         ignoreUpdatesItem.state = isIgnored ? NSControl.StateValue.on : NSControl.StateValue.off
     }
     
+    func update(colorBlindMode isEnabled: Bool) {
+        colorBlindItem.state = isEnabled ? .on : .off
+    }
+    
     // MARK: - NSMenuDelegate
     
     func menuWillOpen(_ menu: NSMenu) {
@@ -169,6 +177,14 @@ class MenuController: NSObject, NSMenuDelegate {
     /// Responds to 'Quit Luxaforus' action.
     @objc func quitAction(sender: AnyObject) {
         _ = delegate?.menu(action: .quit)
+    }
+    
+    /// Responds to 'Color Blind Mode' action.
+    @objc func colorBlindAction(sender: AnyObject) {
+        let newEnabled = !(colorBlindItem.state == .on)
+        if delegate?.menu(action: .colorBlindMode(enabled: newEnabled)) ?? false {
+            update(colorBlindMode: newEnabled)
+        }
     }
     
 }
@@ -218,6 +234,7 @@ enum MenuImageState: String {
 enum MenuAction {
     case opening
     case dimState(enabled: Bool)
+    case colorBlindMode(enabled: Bool)
     case ignoreUpdatesState(enabled: Bool)
     case slackIntegration
     case setKeyboardShortcut

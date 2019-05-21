@@ -20,6 +20,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, StateObserverDelegate, MenuC
     private let slackController: SlackController
     private let updateController: UpdateController
     
+    private var currentState: StateObserverValue?
+    
     override init() {
         menuController = MenuController()
         lightController = LightController()
@@ -52,6 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, StateObserverDelegate, MenuC
         lightController.update(transitionSpeed: 30)
         update(lightDimmed: persistenceManager.fetchDimmed(), updatePersistence: false, updateMenu: true)
         update(ignoreUpdates: persistenceManager.fetchIgnoreUpdates(), updatePersistence: false, updateMenu: true)
+        update(colorBlindMode: persistenceManager.fetchColorBlindModeEnabled(), updatePersistence: false, updateMenu: true)
         
         notificationManager.attach()
         slackController.attach(delegate: self)
@@ -91,6 +94,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, StateObserverDelegate, MenuC
         }
     }
     
+    private func update(colorBlindMode isEnabled: Bool, updatePersistence: Bool, updateMenu: Bool) {
+        if updatePersistence {
+            persistenceManager.set(colorBlindMode: isEnabled)
+        }
+        if updateMenu {
+            menuController.update(colorBlindMode: isEnabled)
+        }
+        if let currentState = currentState {
+            stateObserver(valueChanged: currentState)
+        }
+    }
+    
     private func update(slackLoggedIn isLoggedIn: Bool, updateMenu: Bool) {
         if updateMenu {
             menuController.update(slackLoggedIn: isLoggedIn)
@@ -102,11 +117,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, StateObserverDelegate, MenuC
     // StateObserverDelegate
     func stateObserver(valueChanged value: StateObserverValue) {
         let (color, imageState, snoozed) = { () -> (NSColor, MenuImageState, Bool?) in
+            let colorBlindnessEnabled = self.persistenceManager.fetchColorBlindModeEnabled()
             switch value {
             case .doNotDisturbOff:
-                return (LightColor.available, .available, false)
+                return (LightColor.availableColor(forColorBlinds: colorBlindnessEnabled), .available, false)
             case .doNotDisturbOn:
-                return (LightColor.busy, .busy, true)
+                return (LightColor.busyColor(forColorBlinds: colorBlindnessEnabled), .busy, true)
             case .screenLocked, .detached:
                 return (LightColor.locked, .unknown, nil)
             }
@@ -119,6 +135,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, StateObserverDelegate, MenuC
         if let snoozed = snoozed {
             slackController.update(snoozed: snoozed)
         }
+        
+        // save last selected value for switching between colorblind modes
+        currentState = value
     }
     
     // MenuControllerDelegate
@@ -148,6 +167,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, StateObserverDelegate, MenuC
             }
         case .checkForUpdates:
             updateController.check(automatic: false)
+        case .colorBlindMode(let enabled):
+            update(colorBlindMode: enabled, updatePersistence: true, updateMenu: false)
         case .quit:
             NSApplication.shared.terminate(self)
         }
