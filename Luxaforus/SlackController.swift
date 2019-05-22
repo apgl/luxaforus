@@ -15,7 +15,7 @@ private let kApiUrl = "\(kBaseUrl)/api"
 
 /// Redirect URL for auth calls.
 //private let kRedirectUrl = "https://traversal.space/luxaforus/slack"
-private let kRedirectUrl = "http://localhost/slack/"
+private let kRedirectUrl = "https://ssl.nordija.com/download/slack/luxaforus/"
 
 private let kSnoozePeriod = 60 // minutes
 
